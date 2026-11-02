@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Ficha de casino. Se puede reemplazar por una imagen propia con el mismo nombre. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp" android:height="200dp"
+    android:viewportWidth="200" android:viewportHeight="200">
+    <path android:fillColor="#FF000000" android:pathData="M6,100 a94,94 0 1,0 188,0 a94,94 0 1,0 -188,0"/>
+    <path android:fillColor="#FFD32F2F" android:pathData="M10,100 a90,90 0 1,0 180,0 a90,90 0 1,0 -180,0"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M190.00,100.00 A90,90 0 0,1 183.15,134.44 L162.82,126.02 A68,68 0 0,0 168.00,100.00 Z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M163.64,163.64 A90,90 0 0,1 134.44,183.15 L126.02,162.82 A68,68 0 0,0 148.08,148.08 Z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M100.00,190.00 A90,90 0 0,1 65.56,183.15 L73.98,162.82 A68,68 0 0,0 100.00,168.00 Z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M36.36,163.64 A90,90 0 0,1 16.85,134.44 L37.18,126.02 A68,68 0 0,0 51.92,148.08 Z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M10.00,100.00 A90,90 0 0,1 16.85,65.56 L37.18,73.98 A68,68 0 0,0 32.00,100.00 Z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M36.36,36.36 A90,90 0 0,1 65.56,16.85 L73.98,37.18 A68,68 0 0,0 51.92,51.92 Z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M100.00,10.00 A90,90 0 0,1 134.44,16.85 L126.02,37.18 A68,68 0 0,0 100.00,32.00 Z"/>
+    <path android:fillColor="#FFFFFFFF" android:pathData="M163.64,36.36 A90,90 0 0,1 183.15,65.56 L162.82,73.98 A68,68 0 0,0 148.08,51.92 Z"/>
+    <path android:strokeColor="#FFFFFFFF" android:strokeWidth="3" android:fillColor="#FFB71C1C" android:pathData="M44,100 a56,56 0 1,0 112,0 a56,56 0 1,0 -112,0"/>
+    <path android:fillColor="#FFFFDE59" android:pathData="M100,62 L111,88 L139,88 L116,105 L125,132 L100,115 L75,132 L84,105 L61,88 L89,88 Z"/>
+</vector>

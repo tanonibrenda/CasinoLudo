@@ -2,4 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Paleta de la propuesta (Canva) -->
+    <color name="verde_mesa">#FF00BF63</color>
+    <color name="amarillo_ficha">#FFFFDE59</color>
+    <color name="rojo_ruleta">#FFD32F2F</color>
+    <color name="negro_ruleta">#FF212121</color>
+    <color name="verde_cero">#FF1B5E20</color>
+    <color name="acierto">#FF1B5E20</color>
+    <color name="no_acierto">#FFB71C1C</color>
 </resources>

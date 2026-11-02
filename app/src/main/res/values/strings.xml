@@ -1,3 +1,57 @@
 <resources>
-    <string name="app_name">CasinoLudo</string>
+    <string name="app_name">Casino Ludo</string>
+
+    <!-- Bienvenida -->
+    <string name="titulo_bienvenida">Bienvenidos al Casino Ludo</string>
+    <string name="subtitulo_bienvenida">Ruleta americana · Preparate a ganar</string>
+    <string name="boton_jugar">JUGAR</string>
+
+    <!-- Reglas -->
+    <string name="titulo_reglas">Reglas</string>
+    <string name="reglas_intro">Tenés que hacer 3 apuestas. Después gira la ruleta una sola vez y comparamos cada apuesta con el número ganador.</string>
+    <string name="reglas_detalle">• Número (pleno): 00, 0 al 36\n• Color: Rojo o Negro\n• Paridad: Par o Impar\n• Docena: 1D (1–12), 2D (13–24), 3D (25–36)\n\nEl 0 y el 00 son verdes: no tienen paridad ni docena.</string>
+    <string name="listo_rico">¿Listo para hacerte rico?</string>
+    <string name="boton_entrar">Entrar</string>
+
+    <!-- Apuestas -->
+    <string name="titulo_apuesta">Apuesta %1$d de %2$d</string>
+    <string name="titulo_apuestas_completas">¡Ya tenés tus 3 apuestas!</string>
+    <string name="como_apostar">¿Cómo vas a apostar?</string>
+    <string name="hint_numero">Número (00, 0 al 36)</string>
+    <string name="boton_agregar">Apostar</string>
+    <string name="boton_girar">Girar la ruleta</string>
+    <string name="boton_borrar">Borrar apuestas</string>
+    <string name="tus_apuestas">Tus apuestas</string>
+    <string name="sin_apuestas">Todavía no hiciste ninguna apuesta.</string>
+    <string name="error_numero_vacio">Ingresá un número</string>
+    <string name="error_numero_formato">Solo se permite 00, 0 o del 1 al 36</string>
+    <string name="error_opcion">Elegí una opción</string>
+    <string name="error_faltan_apuestas">Te faltan %1$d apuesta(s) para poder girar</string>
+    <string name="error_ya_tres">Ya hiciste las 3 apuestas</string>
+
+    <!-- Giro -->
+    <string name="girando">Está girando la ruleta…</string>
+    <string name="consultando_color">Consultando el color…</string>
+    <string name="error_api">No pudimos consultar el color del número.\n(%1$s)</string>
+    <string name="boton_reintentar">Reintentar</string>
+
+    <!-- Resultado -->
+    <string name="numero_ganador">Número ganador</string>
+    <string name="detalle_color">Color: %1$s</string>
+    <string name="detalle_paridad">Paridad: %1$s</string>
+    <string name="detalle_docena">Docena: %1$s</string>
+    <string name="acierto">Acierto</string>
+    <string name="no_acierto">No acierto</string>
+    <string name="resumen_aciertos">Acertaste %1$d de %2$d apuestas</string>
+    <string name="titulo_gano_todo">¡Pleno total!</string>
+    <string name="titulo_gano">¡Ganaste!</string>
+    <string name="titulo_perdio">No ganaste esta vez</string>
+    <string name="pero_no_te_rindas">Pero no te rindas</string>
+    <string name="boton_volver_a_jugar">VOLVER A JUGAR</string>
+    <string name="boton_salir">Salir</string>
+    <string name="gracias">Gracias por jugar con nosotros. ¡Volvé pronto!</string>
+
+    <string name="desc_imagen_ruleta">Ruleta de casino</string>
+    <string name="desc_imagen_fichas">Fichas de casino</string>
+    <string name="desc_imagen_resultado">Imagen del resultado</string>
 </resources>

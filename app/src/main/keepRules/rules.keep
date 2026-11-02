@@ -10,3 +10,6 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# Clases que Gson llena por reflexion con la respuesta de la API de colores
+-keep class com.grupo1.casinoludo.red.** { *; }
