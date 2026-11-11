@@ -4,10 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.grupo1.casinoludo.databinding.ActivityMainBinding
-import com.grupo1.casinoludo.util.aplicarMargenesDeSistema
 
-/** Pantalla 1: Bienvenida con imagen, título y botón JUGAR. */
+// Pantalla 1: bienvenida con la imagen del casino y el botón JUGAR
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -17,10 +18,15 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        aplicarMargenesDeSistema(binding.main)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         binding.btnJugar.setOnClickListener {
-            startActivity(Intent(this, BienvenidoActivity::class.java))
+            val intent = Intent(this, BienvenidoActivity::class.java)
+            startActivity(intent)
         }
     }
 }

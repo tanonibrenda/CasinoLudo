@@ -4,41 +4,38 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.BundleCompat
-import androidx.core.widget.doAfterTextChanged
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.grupo1.casinoludo.databinding.ActivityBaseApuestaBinding
-import com.grupo1.casinoludo.logica.LogicaRuleta
-import com.grupo1.casinoludo.modelo.Apuesta
-import com.grupo1.casinoludo.modelo.TipoApuesta
-import com.grupo1.casinoludo.util.Claves
-import com.grupo1.casinoludo.util.aplicarMargenesDeSistema
 
-/**
- * Pantalla 2: el jugador carga sus apuestas de a una.
- * El mismo formulario se repite hasta tener 3 apuestas válidas;
- * recién ahí se habilita "Girar la ruleta".
- */
+// Pantalla 2: el jugador carga sus 3 apuestas, una por una.
+// Recién con las 3 cargadas se habilita el botón para girar la ruleta.
 class BaseApuestaActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBaseApuestaBinding
-
-    private val apuestas = ArrayList<Apuesta>()
-    private var tipoSeleccionado = TipoApuesta.NUMERO
+    private val apuestas = mutableListOf<Apuesta>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityBaseApuestaBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        aplicarMargenesDeSistema(binding.main)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
-        restaurarEstado(savedInstanceState)
-        configurarSelectorDeTipo()
+        // Según el tipo elegido se muestra el campo del número o las opciones
+        binding.rgTipo.setOnCheckedChangeListener { _, idElegido ->
+            mostrarOpciones(idElegido)
+        }
+        mostrarOpciones(binding.rgTipo.checkedRadioButtonId)
 
-        binding.inputNumero.doAfterTextChanged { binding.layoutNumero.error = null }
         binding.btnApostar.setOnClickListener { agregarApuesta() }
         binding.btnBorrar.setOnClickListener { borrarApuestas() }
         binding.btnGirar.setOnClickListener { irAGirar() }
@@ -46,99 +43,65 @@ class BaseApuestaActivity : AppCompatActivity() {
         actualizarPantalla()
     }
 
-    // Guarda las apuestas si se gira el celular, para no perder lo cargado.
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable(Claves.APUESTAS, apuestas)
-        outState.putString(ESTADO_TIPO, tipoSeleccionado.name)
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun restaurarEstado(estado: Bundle?) {
-        if (estado == null) return
-        val guardadas = BundleCompat.getSerializable(estado, Claves.APUESTAS, ArrayList::class.java)
-        (guardadas as? ArrayList<Apuesta>)?.let { apuestas.addAll(it) }
-        estado.getString(ESTADO_TIPO)?.let { tipoSeleccionado = TipoApuesta.valueOf(it) }
-    }
-
-    private fun configurarSelectorDeTipo() {
-        val botonPorTipo = mapOf(
-            TipoApuesta.NUMERO to binding.btnTipoNumero.id,
-            TipoApuesta.COLOR to binding.btnTipoColor.id,
-            TipoApuesta.PARIDAD to binding.btnTipoParidad.id,
-            TipoApuesta.DOCENA to binding.btnTipoDocena.id
-        )
-        binding.grupoTipo.check(botonPorTipo.getValue(tipoSeleccionado))
-        mostrarCampoSegunTipo()
-
-        binding.grupoTipo.addOnButtonCheckedListener { _, idBoton, marcado ->
-            if (!marcado) return@addOnButtonCheckedListener
-            tipoSeleccionado = botonPorTipo.entries.first { it.value == idBoton }.key
-            mostrarCampoSegunTipo()
-        }
-    }
-
-    /** Número → campo de texto. Color, paridad o docena → opciones para tocar. */
-    private fun mostrarCampoSegunTipo() {
-        val esNumero = tipoSeleccionado == TipoApuesta.NUMERO
-        binding.layoutNumero.visibility = if (esNumero) View.VISIBLE else View.GONE
-        binding.grupoOpciones.visibility = if (esNumero) View.GONE else View.VISIBLE
-        binding.layoutNumero.error = null
-
-        binding.grupoOpciones.removeAllViews()
-        tipoSeleccionado.opciones.forEach { opcion ->
-            val radio = RadioButton(this).apply {
-                id = View.generateViewId()
-                text = opcion
-                textSize = 18f
-                setPadding(0, 0, 32, 0)
-            }
-            binding.grupoOpciones.addView(radio)
-        }
+    private fun mostrarOpciones(idElegido: Int) {
+        binding.tilNumero.visibility = if (idElegido == R.id.rbNumero) View.VISIBLE else View.GONE
+        binding.rgColor.visibility = if (idElegido == R.id.rbColor) View.VISIBLE else View.GONE
+        binding.rgParidad.visibility = if (idElegido == R.id.rbParidad) View.VISIBLE else View.GONE
+        binding.rgDocena.visibility = if (idElegido == R.id.rbDocena) View.VISIBLE else View.GONE
+        binding.tilNumero.error = null
     }
 
     private fun agregarApuesta() {
         if (apuestas.size >= LogicaRuleta.CANTIDAD_APUESTAS) {
-            avisar(getString(R.string.error_ya_tres))
+            Toast.makeText(this, R.string.error_ya_tres, Toast.LENGTH_SHORT).show()
             return
         }
-        val valor = leerValorIngresado() ?: return
-        val apuesta = Apuesta(tipoSeleccionado, valor)
 
-        if (!LogicaRuleta.esApuestaValida(apuesta)) {
-            avisar(getString(R.string.error_numero_formato))
-            return
+        val apuesta = when (binding.rgTipo.checkedRadioButtonId) {
+            R.id.rbNumero -> leerNumero()
+            R.id.rbColor -> leerOpcion(binding.rgColor, TipoApuesta.COLOR)
+            R.id.rbParidad -> leerOpcion(binding.rgParidad, TipoApuesta.PARIDAD)
+            R.id.rbDocena -> leerOpcion(binding.rgDocena, TipoApuesta.DOCENA)
+            else -> null
         }
+
+        // Si la apuesta no es válida, no se agrega y se vuelve a pedir
+        if (apuesta == null) return
+
         apuestas.add(apuesta)
         limpiarFormulario()
         actualizarPantalla()
     }
 
-    /** Devuelve el valor elegido, o null (mostrando el error) si falta o es inválido. */
-    private fun leerValorIngresado(): String? {
-        if (tipoSeleccionado == TipoApuesta.NUMERO) {
-            val texto = binding.inputNumero.text?.toString()?.trim().orEmpty()
-            return when {
-                texto.isEmpty() -> {
-                    binding.layoutNumero.error = getString(R.string.error_numero_vacio); null
-                }
-                !LogicaRuleta.esNumeroValido(texto) -> {
-                    binding.layoutNumero.error = getString(R.string.error_numero_formato); null
-                }
-                else -> texto
-            }
-        }
-        val idMarcado = binding.grupoOpciones.checkedRadioButtonId
-        if (idMarcado == View.NO_ID) {
-            avisar(getString(R.string.error_opcion))
+    private fun leerNumero(): Apuesta? {
+        val texto = binding.etNumero.text.toString().trim()
+        if (texto.isEmpty()) {
+            binding.tilNumero.error = getString(R.string.error_numero_vacio)
             return null
         }
-        return findViewById<RadioButton>(idMarcado).text.toString()
+        if (!LogicaRuleta.esNumeroValido(texto)) {
+            binding.tilNumero.error = getString(R.string.error_numero_formato)
+            return null
+        }
+        binding.tilNumero.error = null
+        return Apuesta(TipoApuesta.NUMERO, texto)
+    }
+
+    private fun leerOpcion(grupo: RadioGroup, tipo: TipoApuesta): Apuesta? {
+        val idMarcado = grupo.checkedRadioButtonId
+        if (idMarcado == -1) {
+            Toast.makeText(this, R.string.error_opcion, Toast.LENGTH_SHORT).show()
+            return null
+        }
+        val opcion = grupo.findViewById<RadioButton>(idMarcado)
+        return Apuesta(tipo, opcion.text.toString())
     }
 
     private fun limpiarFormulario() {
-        binding.inputNumero.text?.clear()
-        binding.grupoOpciones.clearCheck()
+        binding.etNumero.text?.clear()
+        binding.rgColor.clearCheck()
+        binding.rgParidad.clearCheck()
+        binding.rgDocena.clearCheck()
     }
 
     private fun borrarApuestas() {
@@ -147,21 +110,25 @@ class BaseApuestaActivity : AppCompatActivity() {
         actualizarPantalla()
     }
 
-    /** Refresca el título "Apuesta X de 3", la lista y qué botones están habilitados. */
+    // Actualiza el título "Apuesta X de 3", la lista y los botones
     private fun actualizarPantalla() {
         val total = LogicaRuleta.CANTIDAD_APUESTAS
-        val completas = apuestas.size >= total
+        val completas = apuestas.size == total
 
-        binding.txtTituloApuesta.text = if (completas) {
-            getString(R.string.titulo_apuestas_completas)
+        if (completas) {
+            binding.tvTituloApuesta.text = getString(R.string.titulo_apuestas_completas)
         } else {
-            getString(R.string.titulo_apuesta, apuestas.size + 1, total)
+            binding.tvTituloApuesta.text = getString(R.string.titulo_apuesta, apuestas.size + 1, total)
         }
 
-        binding.txtListaApuestas.text = if (apuestas.isEmpty()) {
-            getString(R.string.sin_apuestas)
+        if (apuestas.isEmpty()) {
+            binding.tvListaApuestas.text = getString(R.string.sin_apuestas)
         } else {
-            apuestas.mapIndexed { i, a -> "${i + 1}. ${a.descripcion()}" }.joinToString("\n")
+            var lista = ""
+            for (i in apuestas.indices) {
+                lista += "${i + 1}. ${apuestas[i].descripcion()}\n"
+            }
+            binding.tvListaApuestas.text = lista.trim()
         }
 
         binding.cardNuevaApuesta.visibility = if (completas) View.GONE else View.VISIBLE
@@ -170,21 +137,25 @@ class BaseApuestaActivity : AppCompatActivity() {
     }
 
     private fun irAGirar() {
-        val faltan = LogicaRuleta.CANTIDAD_APUESTAS - apuestas.size
-        if (faltan > 0) {
-            avisar(getString(R.string.error_faltan_apuestas, faltan))
+        if (apuestas.size < LogicaRuleta.CANTIDAD_APUESTAS) {
+            val faltan = LogicaRuleta.CANTIDAD_APUESTAS - apuestas.size
+            Toast.makeText(this, getString(R.string.error_faltan_apuestas, faltan), Toast.LENGTH_SHORT).show()
             return
         }
+
+        // Las apuestas viajan a la otra pantalla como dos arreglos de texto
+        val tipos = Array(apuestas.size) { apuestas[it].tipo.name }
+        val valores = Array(apuestas.size) { apuestas[it].valor }
+
         val intent = Intent(this, GiroRuletaActivity::class.java)
-            .putExtra(Claves.APUESTAS, ArrayList(apuestas))
+        intent.putExtra(EXTRA_TIPOS, tipos)
+        intent.putExtra(EXTRA_VALORES, valores)
         startActivity(intent)
         finish()
     }
 
-    private fun avisar(mensaje: String) =
-        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
-
-    private companion object {
-        const val ESTADO_TIPO = "tipo_seleccionado"
+    companion object {
+        const val EXTRA_TIPOS = "extra_tipos"
+        const val EXTRA_VALORES = "extra_valores"
     }
 }

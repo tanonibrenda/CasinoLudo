@@ -7,104 +7,100 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnEnd
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.grupo1.casinoludo.databinding.ActivityGiroRuletaBinding
-import com.grupo1.casinoludo.logica.LogicaRuleta
-import com.grupo1.casinoludo.modelo.Apuesta
-import com.grupo1.casinoludo.modelo.ResultadoRuleta
-import com.grupo1.casinoludo.red.ClienteApi
-import com.grupo1.casinoludo.util.Claves
-import com.grupo1.casinoludo.util.aplicarMargenesDeSistema
-import com.grupo1.casinoludo.util.leerApuestas
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.random.Random
 
-/**
- * Se gira la ruleta UNA sola vez para las 3 apuestas.
- * Mientras se anima la ruleta, se consulta el color del número a la API
- * en una corrutina, así la interfaz nunca se bloquea.
- */
+// Se gira la ruleta una sola vez para las 3 apuestas y se pide el color a la API
 class GiroRuletaActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGiroRuletaBinding
-
-    private lateinit var apuestas: ArrayList<Apuesta>
-    private lateinit var numeroGanador: String
+    private var tipos = arrayOf<String>()
+    private var valores = arrayOf<String>()
+    private var numeroGanador = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityGiroRuletaBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        aplicarMargenesDeSistema(binding.main)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
-        apuestas = intent.leerApuestas()
-        // Si se rota la pantalla se conserva el mismo número: no se vuelve a sortear.
-        numeroGanador = savedInstanceState?.getString(ESTADO_NUMERO) ?: LogicaRuleta.girar()
+        tipos = intent.getStringArrayExtra(BaseApuestaActivity.EXTRA_TIPOS) ?: arrayOf()
+        valores = intent.getStringArrayExtra(BaseApuestaActivity.EXTRA_VALORES) ?: arrayOf()
 
-        binding.btnReintentar.setOnClickListener { girarYConsultarColor() }
-        girarYConsultarColor()
+        numeroGanador = LogicaRuleta.girar()
+
+        binding.btnReintentar.setOnClickListener { consultarApi() }
+        girarRuleta()
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(ESTADO_NUMERO, numeroGanador)
+    // Animación de propiedades (ObjectAnimator): la ruleta da varias vueltas
+    // y va frenando de a poco. Cuando termina, se consulta el color a la API.
+    private fun girarRuleta() {
+        binding.tvEstado.text = getString(R.string.girando)
+        binding.progreso.visibility = View.GONE
+
+        val vueltas = 360f * 5 + Random.nextInt(0, 360)
+        val animacion = ObjectAnimator.ofFloat(binding.imgRuleta, "rotation", 0f, vueltas)
+        animacion.duration = 3500
+        animacion.interpolator = DecelerateInterpolator()
+        animacion.doOnEnd { consultarApi() }
+        animacion.start()
     }
 
-    private fun girarYConsultarColor() {
-        mostrarCargando()
-        animarRuleta()
+    // Igual que en la guía: corrutina con lifecycleScope para no bloquear la pantalla
+    private fun consultarApi() {
+        binding.tvEstado.text = getString(R.string.consultando_color)
+        binding.progreso.visibility = View.VISIBLE
+        binding.btnReintentar.visibility = View.GONE
 
         lifecycleScope.launch {
-            // La animación y la llamada a la API corren al mismo tiempo.
-            val esperaAnimacion = async { delay(DURACION_GIRO_MS) }
             try {
-                val color = ClienteApi.consultarColor(numeroGanador)
-                esperaAnimacion.await()
+                val response = RetrofitClient.apiService.getBolaColor(bola = numeroGanador)
+                val color = response.body()?.color
+                val errorApi = response.body()?.error
 
-                val resultado = LogicaRuleta.armarResultado(numeroGanador, color)
-                irAResultados(resultado)
-            } catch (e: CancellationException) {
-                throw e
+                if (response.isSuccessful && color != null) {
+                    irAResultados(color)
+                } else if (errorApi != null) {
+                    mostrarError(errorApi)
+                } else {
+                    mostrarError("Error HTTP ${response.code()}")
+                }
             } catch (e: Exception) {
-                esperaAnimacion.cancel()
-                mostrarError(e.localizedMessage ?: e.toString())
+                // Sin internet, servidor caído, etc.
+                mostrarError("Error de conexión: ${e.localizedMessage}")
             }
         }
     }
 
-    private fun animarRuleta() {
-        ObjectAnimator.ofFloat(binding.imgRuleta, View.ROTATION, 0f, 360f * 5).apply {
-            duration = DURACION_GIRO_MS
-            interpolator = DecelerateInterpolator()
-            start()
-        }
-    }
-
-    private fun mostrarCargando() {
-        binding.progreso.visibility = View.VISIBLE
-        binding.btnReintentar.visibility = View.GONE
-        binding.txtEstado.setText(R.string.consultando_color)
-    }
-
-    private fun mostrarError(detalle: String) {
+    private fun mostrarError(mensaje: String) {
         binding.progreso.visibility = View.GONE
         binding.btnReintentar.visibility = View.VISIBLE
-        binding.txtEstado.text = getString(R.string.error_api, detalle)
+        binding.tvEstado.text = getString(R.string.error_api, mensaje)
     }
 
-    private fun irAResultados(resultado: ResultadoRuleta) {
+    private fun irAResultados(color: String) {
         val intent = Intent(this, ResultadoActivity::class.java)
-            .putExtra(Claves.APUESTAS, apuestas)
-            .putExtra(Claves.RESULTADO, resultado)
+        intent.putExtra(BaseApuestaActivity.EXTRA_TIPOS, tipos)
+        intent.putExtra(BaseApuestaActivity.EXTRA_VALORES, valores)
+        intent.putExtra(EXTRA_NUMERO, numeroGanador)
+        intent.putExtra(EXTRA_COLOR, color)
         startActivity(intent)
         finish()
     }
 
-    private companion object {
-        const val ESTADO_NUMERO = "numero_ganador"
-        const val DURACION_GIRO_MS = 2500L
+    companion object {
+        const val EXTRA_NUMERO = "extra_numero"
+        const val EXTRA_COLOR = "extra_color"
     }
 }

@@ -17,7 +17,7 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/txtTituloResultado"
+            android:id="@+id/tvTituloResultado"
             style="@style/TextoTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,18 +25,18 @@
 
         <ImageView
             android:id="@+id/imgResultado"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="12dp"
-            android:contentDescription="@string/desc_imagen_resultado"
-            tools:src="@drawable/img_ficha" />
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/desc_resultado"
+            tools:src="@drawable/img_fichas" />
 
         <!-- Número ganador y sus características -->
         <com.google.android.material.card.MaterialCardView
             style="@style/Tarjeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -46,13 +46,12 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:id="@+id/txtNumeroGanador"
+                    android:id="@+id/tvNumeroGanador"
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:background="@drawable/bg_circulo"
                     android:gravity="center"
-                    android:textColor="@color/white"
-                    android:textSize="38sp"
+                    android:textSize="40sp"
                     android:textStyle="bold"
                     tools:text="17" />
 
@@ -72,23 +71,21 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/txtColor"
+                        android:id="@+id/tvColor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         tools:text="Color: Negro" />
-
                     <TextView
-                        android:id="@+id/txtParidad"
+                        android:id="@+id/tvParidad"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         tools:text="Paridad: Impar" />
-
                     <TextView
-                        android:id="@+id/txtDocena"
+                        android:id="@+id/tvDocena"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
@@ -98,7 +95,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Comparación de las 3 apuestas (se llena desde el código) -->
+        <!-- Comparación de las 3 apuestas -->
         <com.google.android.material.card.MaterialCardView
             style="@style/Tarjeta"
             android:layout_width="match_parent"
@@ -106,7 +103,6 @@
             android:layout_marginTop="16dp">
 
             <LinearLayout
-                android:id="@+id/contenedorApuestas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -120,11 +116,81 @@
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="6dp">
+
+                    <TextView
+                        android:id="@+id/tvApuesta1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        tools:text="1. Color: Rojo" />
+
+                    <TextView
+                        android:id="@+id/tvEstado1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        tools:text="✔ Acierto" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="6dp">
+
+                    <TextView
+                        android:id="@+id/tvApuesta2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        tools:text="2. Color: Rojo" />
+
+                    <TextView
+                        android:id="@+id/tvEstado2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        tools:text="✔ Acierto" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="6dp">
+
+                    <TextView
+                        android:id="@+id/tvApuesta3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        tools:text="3. Color: Rojo" />
+
+                    <TextView
+                        android:id="@+id/tvEstado3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        tools:text="✔ Acierto" />
+                </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/txtResumen"
+            android:id="@+id/tvResumen"
             style="@style/TextoSubtitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,50 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Pantalla 1: Bienvenida -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/verde_mesa"
-    android:fillViewport="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="24dp"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:contentDescription="@string/desc_logo"
+        android:src="@drawable/img_logo" />
+
+    <TextView
+        style="@style/TextoSubtitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_marginTop="16dp"
+        android:text="@string/subtitulo_bienvenida" />
 
-        <TextView
-            style="@style/TextoTitulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/titulo_bienvenida"
-            android:textSize="36sp" />
-
-        <ImageView
-            android:id="@+id/imgRuleta"
-            android:layout_width="240dp"
-            android:layout_height="240dp"
-            android:layout_marginTop="32dp"
-            android:contentDescription="@string/desc_imagen_ruleta"
-            android:src="@drawable/img_ruleta" />
-
-        <TextView
-            style="@style/TextoSubtitulo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/subtitulo_bienvenida" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnJugar"
-            style="@style/BotonFicha"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/boton_jugar"
-            android:textSize="26sp" />
-    </LinearLayout>
-</ScrollView>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnJugar"
+        style="@style/BotonFicha"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/boton_jugar"
+        android:textSize="26sp" />
+</LinearLayout>

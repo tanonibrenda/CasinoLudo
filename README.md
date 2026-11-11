@@ -17,15 +17,21 @@ MainActivity (Bienvenida, botón JUGAR)
 
 ## Estructura del código
 
-| Paquete | Archivo | Qué hace |
-|---|---|---|
-| `modelo` | `TipoApuesta.kt` | Número, Color, Paridad, Docena y sus opciones válidas |
-| `modelo` | `Apuesta.kt` | Una apuesta (tipo + valor). Serializable para pasarla entre pantallas |
-| `modelo` | `ResultadoRuleta.kt` | Número ganador con color, paridad y docena |
-| `logica` | `LogicaRuleta.kt` | Sorteo, validación, paridad, docena, comparación de aciertos |
-| `red` | `ServicioApiColor.kt` | Retrofit + corrutinas para consultar el color |
-| `red` | `RespuestaColor.kt` | JSON que devuelve la API |
-| `util` | `Navegacion.kt` | Claves de los Intent y márgenes de pantalla |
+Todo está en el paquete `com.grupo1.casinoludo`:
+
+| Archivo | Qué hace |
+|---|---|
+| `MainActivity.kt` | Bienvenida con imagen y botón JUGAR |
+| `BienvenidoActivity.kt` | Reglas del juego y botón Entrar |
+| `BaseApuestaActivity.kt` | Carga de las 3 apuestas con validación |
+| `GiroRuletaActivity.kt` | Animación de la ruleta (ObjectAnimator) y consulta a la API |
+| `ResultadoActivity.kt` | Número ganador, Acierto / No acierto y resumen |
+| `Apuesta.kt`, `TipoApuesta.kt` | Una apuesta del jugador y sus tipos |
+| `ResultadoRuleta.kt` | Número ganador con color, paridad y docena |
+| `LogicaRuleta.kt` | Sorteo, validación, paridad (`%`), docena (`when`) y comparación |
+| `RuletaApi.kt` | Retrofit + Gson, igual que la guía de la cátedra |
+
+Las pantallas usan View Binding y los datos pasan entre pantallas con `Intent.putExtra`.
 
 Reglas especiales: el 0 y el 00 son verdes, no tienen paridad ni docena.
 El color sale **solo** de la API; paridad y docena se calculan en `LogicaRuleta`.
@@ -35,7 +41,7 @@ El color sale **solo** de la API; paridad y docena se calculan en `LogicaRuleta`
 `GET https://www.menupro.com.ar/api.php?usuario=usuario1&clave=1234567890&bola=7`
 → `{"bola": 7, "color": "rojo", "error": null}`
 
-Implementada en `red/ServicioApiColor.kt` (Retrofit + corrutinas) y `red/RespuestaColor.kt` (Gson).
+Implementada en `RuletaApi.kt` (Retrofit + Gson) y llamada con corrutinas desde `GiroRuletaActivity`.
 Para ver la petición y el JSON: pestaña **Logcat** filtrando por `okhttp`.
 
 ## Tests

@@ -4,10 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.grupo1.casinoludo.databinding.ActivityBienvenidoBinding
-import com.grupo1.casinoludo.util.aplicarMargenesDeSistema
 
-/** Explica las reglas antes de empezar a apostar. */
+// Muestra las reglas del juego antes de empezar a apostar
 class BienvenidoActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBienvenidoBinding
@@ -17,10 +18,15 @@ class BienvenidoActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityBienvenidoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        aplicarMargenesDeSistema(binding.main)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         binding.btnEntrar.setOnClickListener {
-            startActivity(Intent(this, BaseApuestaActivity::class.java))
+            val intent = Intent(this, BaseApuestaActivity::class.java)
+            startActivity(intent)
         }
     }
 }

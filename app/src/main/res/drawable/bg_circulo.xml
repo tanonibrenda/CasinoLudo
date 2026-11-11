@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Círculo para mostrar el número ganador; el color se cambia desde el código -->
+<!-- Círculo blanco con borde amarillo para el número ganador -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-    <solid android:color="@color/negro_ruleta" />
+    <solid android:color="@color/white" />
     <stroke android:width="4dp" android:color="@color/amarillo_ficha" />
 </shape>

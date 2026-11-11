@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Pantalla 2: carga de las 3 apuestas (se reutiliza para la 1ra, 2da y 3ra) -->
+<!-- Pantalla 2: carga de las 3 apuestas (el mismo formulario se usa para la 1ra, 2da y 3ra) -->
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -17,7 +17,7 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/txtTituloApuesta"
+            android:id="@+id/tvTituloApuesta"
             style="@style/TextoTitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -44,87 +44,140 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/grupoTipo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    app:selectionRequired="true"
-                    app:singleSelection="true">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnTipoNumero"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingHorizontal="2dp"
-                        android:text="Número"
-                        android:textSize="13sp"
-                        tools:ignore="HardcodedText" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnTipoColor"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingHorizontal="2dp"
-                        android:text="Color"
-                        android:textSize="13sp"
-                        tools:ignore="HardcodedText" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnTipoParidad"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingHorizontal="2dp"
-                        android:text="Paridad"
-                        android:textSize="13sp"
-                        tools:ignore="HardcodedText" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnTipoDocena"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingHorizontal="2dp"
-                        android:text="Docena"
-                        android:textSize="13sp"
-                        tools:ignore="HardcodedText" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
-
-                <!-- Visible solo para apuestas a número -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/layoutNumero"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                <!-- Tipo de apuesta -->
+                <RadioGroup
+                    android:id="@+id/rgTipo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="4dp">
+                    <RadioButton
+                        android:id="@+id/rbNumero"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/tipo_numero"
+                        android:textSize="18sp" />
+                    <RadioButton
+                        android:id="@+id/rbColor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/tipo_color"
+                        android:textSize="18sp" />
+                    <RadioButton
+                        android:id="@+id/rbParidad"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/tipo_paridad"
+                        android:textSize="18sp" />
+                    <RadioButton
+                        android:id="@+id/rbDocena"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/tipo_docena"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+                <!-- Visible solo para apuestas a número -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilNumero"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:hint="@string/hint_numero"
                     app:boxStrokeColor="@color/black"
                     app:hintTextColor="@color/black">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/inputNumero"
+                        android:id="@+id/etNumero"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:imeOptions="actionDone"
                         android:inputType="number"
                         android:maxLength="2" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Visible para color, paridad y docena; las opciones se cargan desde el código -->
+                <!-- Opciones de color, paridad y docena (se muestra solo la del tipo elegido) -->
                 <RadioGroup
-                    android:id="@+id/grupoOpciones"
+                    android:id="@+id/rgColor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:orientation="horizontal"
-                    android:visibility="gone" />
+                    android:visibility="gone">
+                    <RadioButton
+                        android:id="@+id/rbRojo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/opcion_rojo"
+                        android:textSize="18sp" />
+                    <RadioButton
+                        android:id="@+id/rbNegro"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/opcion_negro"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+                <RadioGroup
+                    android:id="@+id/rgParidad"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+                    <RadioButton
+                        android:id="@+id/rbPar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/opcion_par"
+                        android:textSize="18sp" />
+                    <RadioButton
+                        android:id="@+id/rbImpar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/opcion_impar"
+                        android:textSize="18sp" />
+                </RadioGroup>
+
+                <RadioGroup
+                    android:id="@+id/rgDocena"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+                    <RadioButton
+                        android:id="@+id/rb1D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/opcion_1d"
+                        android:textSize="18sp" />
+                    <RadioButton
+                        android:id="@+id/rb2D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/opcion_2d"
+                        android:textSize="18sp" />
+                    <RadioButton
+                        android:id="@+id/rb3D"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
+                        android:text="@string/opcion_3d"
+                        android:textSize="18sp" />
+                </RadioGroup>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnApostar"
@@ -132,7 +185,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="@string/boton_agregar" />
+                    android:text="@string/boton_apostar" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -157,14 +210,14 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txtListaApuestas"
+                    android:id="@+id/tvListaApuestas"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="6dp"
                     android:textColor="@color/black"
                     android:textSize="17sp"
-                    tools:text="1. Color: Rojo\n2. Número: 17" />
+                    tools:text="1. Color: Rojo" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnBorrar"

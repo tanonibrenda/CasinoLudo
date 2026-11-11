@@ -4,7 +4,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- Paleta de la propuesta (Canva) -->
-    <color name="verde_mesa">#FF00BF63</color>
+    <color name="verde_mesa">#FF00BF62</color>
     <color name="amarillo_ficha">#FFFFDE59</color>
     <color name="rojo_ruleta">#FFD32F2F</color>
     <color name="negro_ruleta">#FF212121</color>
