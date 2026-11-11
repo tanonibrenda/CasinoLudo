@@ -13,7 +13,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.grupo1.casinoludo.databinding.ActivityGiroRuletaBinding
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 // Se gira la ruleta una sola vez para las 3 apuestas y se pide el color a la API
 class GiroRuletaActivity : AppCompatActivity() {
@@ -43,18 +42,28 @@ class GiroRuletaActivity : AppCompatActivity() {
         girarRuleta()
     }
 
-    // Animación de propiedades (ObjectAnimator): la ruleta da varias vueltas
-    // y va frenando de a poco. Cuando termina, se consulta el color a la API.
+    // Animación de propiedades (ObjectAnimator), como en la guía de animaciones de Android:
+    // la ruleta da 5 vueltas, va frenando de a poco y se detiene con el número ganador
+    // justo debajo de la flecha amarilla. Cuando termina, se consulta el color a la API.
     private fun girarRuleta() {
         binding.tvEstado.text = getString(R.string.girando)
         binding.progreso.visibility = View.GONE
 
-        val vueltas = 360f * 5 + Random.nextInt(0, 360)
-        val animacion = ObjectAnimator.ofFloat(binding.imgRuleta, "rotation", 0f, vueltas)
-        animacion.duration = 3500
-        animacion.interpolator = DecelerateInterpolator()
+        val anguloFinal = 360f * 5 + anguloDelNumero(numeroGanador)
+        val animacion = ObjectAnimator.ofFloat(binding.imgRuleta, "rotation", 0f, anguloFinal)
+        animacion.duration = 4000
+        animacion.interpolator = DecelerateInterpolator(2f)
         animacion.doOnEnd { consultarApi() }
         animacion.start()
+    }
+
+    // La imagen tiene 37 casilleros y el 0 está arriba. Para dejar un número debajo
+    // de la flecha hay que girar la ruleta lo que falta para completar la vuelta.
+    // La imagen no tiene el 00, así que para el 00 se frena en el 0 (el otro verde).
+    private fun anguloDelNumero(numero: String): Float {
+        val posicion = ORDEN_RULETA.indexOf(numero).coerceAtLeast(0)
+        val anchoCasillero = 360f / ORDEN_RULETA.size
+        return (360f - posicion * anchoCasillero) % 360f
     }
 
     // Igual que en la guía: corrutina con lifecycleScope para no bloquear la pantalla
@@ -102,5 +111,12 @@ class GiroRuletaActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_NUMERO = "extra_numero"
         const val EXTRA_COLOR = "extra_color"
+
+        // Orden de los números en la imagen, empezando por el 0 y en sentido horario
+        val ORDEN_RULETA = listOf(
+            "0", "32", "15", "19", "4", "21", "2", "25", "17", "34", "6", "27", "13",
+            "36", "11", "30", "8", "23", "10", "5", "24", "16", "33", "1", "20", "14",
+            "31", "9", "22", "18", "29", "7", "28", "12", "35", "3", "26"
+        )
     }
 }
