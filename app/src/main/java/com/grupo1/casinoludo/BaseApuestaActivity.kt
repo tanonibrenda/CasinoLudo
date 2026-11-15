@@ -27,9 +27,11 @@ class BaseApuestaActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityBaseApuestaBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // Además de las barras del sistema se deja lugar para el teclado (ime),
+        // así el campo del número no queda tapado cuando aparece el teclado.
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            val barras = insets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.ime())
+            v.setPadding(barras.left, barras.top, barras.right, barras.bottom)
             insets
         }
 

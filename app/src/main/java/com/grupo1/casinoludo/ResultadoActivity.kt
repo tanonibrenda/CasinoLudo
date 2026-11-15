@@ -84,10 +84,8 @@ class ResultadoActivity : AppCompatActivity() {
 
         if (aciertos > 0) {
             binding.tvTituloResultado.text = getString(R.string.titulo_gano)
-            binding.imgResultado.setImageResource(R.drawable.img_fichas)
         } else {
             binding.tvTituloResultado.text = getString(R.string.titulo_perdio)
-            binding.imgResultado.setImageResource(R.drawable.img_ruleta)
         }
     }
 
