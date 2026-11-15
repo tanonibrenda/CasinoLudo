@@ -46,6 +46,7 @@ class GiroRuletaActivity : AppCompatActivity() {
     // la ruleta da 5 vueltas, va frenando de a poco y se detiene con el número ganador
     // justo debajo de la flecha amarilla. Cuando termina, se consulta el color a la API.
     private fun girarRuleta() {
+        binding.tvEstado.textSize = 24f
         binding.tvEstado.text = getString(R.string.girando)
         binding.progreso.visibility = View.GONE
 
@@ -68,6 +69,7 @@ class GiroRuletaActivity : AppCompatActivity() {
 
     // Igual que en la guía: corrutina con lifecycleScope para no bloquear la pantalla
     private fun consultarApi() {
+        binding.tvEstado.textSize = 24f
         binding.tvEstado.text = getString(R.string.consultando_color)
         binding.progreso.visibility = View.VISIBLE
         binding.btnReintentar.visibility = View.GONE
@@ -95,6 +97,8 @@ class GiroRuletaActivity : AppCompatActivity() {
     private fun mostrarError(mensaje: String) {
         binding.progreso.visibility = View.GONE
         binding.btnReintentar.visibility = View.VISIBLE
+        // El error puede ser largo: letra más chica para que no empuje la ruleta
+        binding.tvEstado.textSize = 16f
         binding.tvEstado.text = getString(R.string.error_api, mensaje)
     }
 

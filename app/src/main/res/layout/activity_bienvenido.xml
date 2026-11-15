@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="24dp">
@@ -57,13 +57,16 @@
             style="@style/TextoSubtitulo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:text="@string/listo_rico" />
 
         <ImageView
-            android:layout_width="180dp"
-            android:layout_height="180dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="80dp"
             android:layout_marginTop="8dp"
+            android:scaleType="fitCenter"
             android:contentDescription="@string/desc_fichas"
             android:src="@drawable/img_fichas" />
 
