@@ -52,8 +52,10 @@ class GiroRuletaActivity : AppCompatActivity() {
 
         val anguloFinal = 360f * 5 + anguloDelNumero(numeroGanador)
         val animacion = ObjectAnimator.ofFloat(binding.imgRuleta, "rotation", 0f, anguloFinal)
-        animacion.duration = 4000
-        animacion.interpolator = DecelerateInterpolator(2f)
+        // 6 segundos y frenado suave. Si el usuario desactivó las animaciones en su
+        // celular (Accesibilidad), Android la acorta solo y el juego sigue igual.
+        animacion.duration = 6000
+        animacion.interpolator = DecelerateInterpolator(1.5f)
         animacion.doOnEnd { consultarApi() }
         animacion.start()
     }

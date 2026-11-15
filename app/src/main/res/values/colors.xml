@@ -3,12 +3,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Paleta de la propuesta (Canva) -->
+    <!-- Paleta de la propuesta (Canva).
+         Contrastes medidos con la fórmula de WCAG 2.2:
+         negro sobre amarillo 15.8:1, amarillo sobre negro_ruleta 12.2:1,
+         acierto sobre blanco 7.9:1, no_acierto sobre blanco 8.8:1 (AAA pide 7:1)
+         rojo_ruleta sobre blanco 5.6:1 (solo en el número grande, AAA texto grande pide 4.5:1) -->
     <color name="verde_mesa">#FF00BF62</color>
     <color name="amarillo_ficha">#FFFFDE59</color>
-    <color name="rojo_ruleta">#FFD32F2F</color>
+    <color name="rojo_ruleta">#FFC62828</color>
     <color name="negro_ruleta">#FF212121</color>
     <color name="verde_cero">#FF1B5E20</color>
     <color name="acierto">#FF1B5E20</color>
-    <color name="no_acierto">#FFB71C1C</color>
+    <color name="no_acierto">#FF9A0007</color>
 </resources>

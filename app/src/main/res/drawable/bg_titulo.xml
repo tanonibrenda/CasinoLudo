@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Fondo oscuro detrás de los títulos amarillos.
+     Amarillo sobre el verde da contraste 1.84:1 (no cumple WCAG).
+     Amarillo sobre este negro da 12.15:1 (cumple AAA, que pide 7:1). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/negro_ruleta" />
+    <corners android:radius="12dp" />
+    <stroke android:width="2dp" android:color="@color/amarillo_ficha" />
+</shape>
