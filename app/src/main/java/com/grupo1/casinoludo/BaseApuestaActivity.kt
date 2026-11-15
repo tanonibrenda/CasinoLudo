@@ -3,6 +3,8 @@ package com.grupo1.casinoludo
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
@@ -18,6 +20,7 @@ class BaseApuestaActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityBaseApuestaBinding
     private val apuestas = mutableListOf<Apuesta>()
+    private var tipoElegido = TipoApuesta.NUMERO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,11 +33,26 @@ class BaseApuestaActivity : AppCompatActivity() {
             insets
         }
 
+        // Menú desplegable con los 4 tipos de apuesta (ArrayAdapter, igual que con el ListView)
+        val tipos = arrayOf(
+            getString(R.string.tipo_numero),
+            getString(R.string.tipo_color),
+            getString(R.string.tipo_paridad),
+            getString(R.string.tipo_docena)
+        )
+        val adaptador = ArrayAdapter(this, android.R.layout.simple_spinner_item, tipos)
+        adaptador.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spTipo.adapter = adaptador
+
         // Según el tipo elegido se muestra el campo del número o las opciones
-        binding.rgTipo.setOnCheckedChangeListener { _, idElegido ->
-            mostrarOpciones(idElegido)
+        binding.spTipo.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                tipoElegido = TipoApuesta.entries[position]
+                mostrarOpciones()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        mostrarOpciones(binding.rgTipo.checkedRadioButtonId)
 
         binding.btnApostar.setOnClickListener { agregarApuesta() }
         binding.btnBorrar.setOnClickListener { borrarApuestas() }
@@ -43,11 +61,11 @@ class BaseApuestaActivity : AppCompatActivity() {
         actualizarPantalla()
     }
 
-    private fun mostrarOpciones(idElegido: Int) {
-        binding.tilNumero.visibility = if (idElegido == R.id.rbNumero) View.VISIBLE else View.GONE
-        binding.rgColor.visibility = if (idElegido == R.id.rbColor) View.VISIBLE else View.GONE
-        binding.rgParidad.visibility = if (idElegido == R.id.rbParidad) View.VISIBLE else View.GONE
-        binding.rgDocena.visibility = if (idElegido == R.id.rbDocena) View.VISIBLE else View.GONE
+    private fun mostrarOpciones() {
+        binding.tilNumero.visibility = if (tipoElegido == TipoApuesta.NUMERO) View.VISIBLE else View.GONE
+        binding.rgColor.visibility = if (tipoElegido == TipoApuesta.COLOR) View.VISIBLE else View.GONE
+        binding.rgParidad.visibility = if (tipoElegido == TipoApuesta.PARIDAD) View.VISIBLE else View.GONE
+        binding.rgDocena.visibility = if (tipoElegido == TipoApuesta.DOCENA) View.VISIBLE else View.GONE
         binding.tilNumero.error = null
     }
 
@@ -57,12 +75,11 @@ class BaseApuestaActivity : AppCompatActivity() {
             return
         }
 
-        val apuesta = when (binding.rgTipo.checkedRadioButtonId) {
-            R.id.rbNumero -> leerNumero()
-            R.id.rbColor -> leerOpcion(binding.rgColor, TipoApuesta.COLOR)
-            R.id.rbParidad -> leerOpcion(binding.rgParidad, TipoApuesta.PARIDAD)
-            R.id.rbDocena -> leerOpcion(binding.rgDocena, TipoApuesta.DOCENA)
-            else -> null
+        val apuesta = when (tipoElegido) {
+            TipoApuesta.NUMERO -> leerNumero()
+            TipoApuesta.COLOR -> leerOpcion(binding.rgColor, TipoApuesta.COLOR)
+            TipoApuesta.PARIDAD -> leerOpcion(binding.rgParidad, TipoApuesta.PARIDAD)
+            TipoApuesta.DOCENA -> leerOpcion(binding.rgDocena, TipoApuesta.DOCENA)
         }
 
         // Si la apuesta no es válida, no se agrega y se vuelve a pedir

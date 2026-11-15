@@ -28,13 +28,13 @@
             style="@style/Tarjeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -44,40 +44,12 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <!-- Tipo de apuesta -->
-                <RadioGroup
-                    android:id="@+id/rgTipo"
+                <!-- Tipo de apuesta: menú desplegable, como en la propuesta -->
+                <Spinner
+                    android:id="@+id/spTipo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:orientation="vertical"
-                    android:layout_marginBottom="4dp">
-                    <RadioButton
-                        android:id="@+id/rbNumero"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="@string/tipo_numero"
-                        android:textSize="18sp" />
-                    <RadioButton
-                        android:id="@+id/rbColor"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/tipo_color"
-                        android:textSize="18sp" />
-                    <RadioButton
-                        android:id="@+id/rbParidad"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/tipo_paridad"
-                        android:textSize="18sp" />
-                    <RadioButton
-                        android:id="@+id/rbDocena"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/tipo_docena"
-                        android:textSize="18sp" />
-                </RadioGroup>
+                    android:layout_height="48dp"
+                    android:layout_marginTop="4dp" />
 
                 <!-- Visible solo para apuestas a número -->
                 <com.google.android.material.textfield.TextInputLayout
@@ -189,13 +161,13 @@
             style="@style/Tarjeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="12dp">
 
                 <TextView
                     android:layout_width="wrap_content"

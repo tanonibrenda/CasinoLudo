@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
         <TextView
             style="@style/TextoTitulo"
@@ -32,24 +32,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/reglas_intro"
                     android:textColor="@color/black"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:lineSpacingExtra="4dp"
+                    android:lineSpacingExtra="2dp"
                     android:text="@string/reglas_detalle"
                     android:textColor="@color/black"
-                    android:textSize="17sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -64,8 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:minHeight="80dp"
-            android:layout_marginTop="8dp"
+                        android:layout_marginTop="8dp"
             android:scaleType="fitCenter"
             android:contentDescription="@string/desc_fichas"
             android:src="@drawable/img_fichas" />
