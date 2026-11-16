@@ -42,16 +42,14 @@ class GiroRuletaActivity : AppCompatActivity() {
         girarRuleta()
     }
 
-    // Animación de propiedades (ObjectAnimator), como en la guía de animaciones de Android:
-    // la ruleta da 5 vueltas, va frenando de a poco y se detiene con el número ganador
-    // justo debajo de la flecha amarilla. Cuando termina, se consulta el color a la API.
+    // Animación de propiedades (ObjectAnimator), como en la guía de animaciones de Android.
+    // La ruleta es solo decorativa: la imagen da 5 vueltas y va frenando de a poco.
+    // Cuando termina, se consulta el color a la API.
     private fun girarRuleta() {
-        binding.tvEstado.textSize = 24f
         binding.tvEstado.text = getString(R.string.girando)
         binding.progreso.visibility = View.GONE
 
-        val anguloFinal = 360f * 5 + anguloDelNumero(numeroGanador)
-        val animacion = ObjectAnimator.ofFloat(binding.imgRuleta, "rotation", 0f, anguloFinal)
+        val animacion = ObjectAnimator.ofFloat(binding.imgRuleta, "rotation", 0f, 360f * 5)
         // 6 segundos y frenado suave. Si el usuario desactivó las animaciones en su
         // celular (Accesibilidad), Android la acorta solo y el juego sigue igual.
         animacion.duration = 6000
@@ -60,18 +58,8 @@ class GiroRuletaActivity : AppCompatActivity() {
         animacion.start()
     }
 
-    // La imagen tiene 37 casilleros y el 0 está arriba. Para dejar un número debajo
-    // de la flecha hay que girar la ruleta lo que falta para completar la vuelta.
-    // La imagen no tiene el 00, así que para el 00 se frena en el 0 (el otro verde).
-    private fun anguloDelNumero(numero: String): Float {
-        val posicion = ORDEN_RULETA.indexOf(numero).coerceAtLeast(0)
-        val anchoCasillero = 360f / ORDEN_RULETA.size
-        return (360f - posicion * anchoCasillero) % 360f
-    }
-
     // Igual que en la guía: corrutina con lifecycleScope para no bloquear la pantalla
     private fun consultarApi() {
-        binding.tvEstado.textSize = 24f
         binding.tvEstado.text = getString(R.string.consultando_color)
         binding.progreso.visibility = View.VISIBLE
         binding.btnReintentar.visibility = View.GONE
@@ -80,28 +68,23 @@ class GiroRuletaActivity : AppCompatActivity() {
             try {
                 val response = RetrofitClient.apiService.getBolaColor(bola = numeroGanador)
                 val color = response.body()?.color
-                val errorApi = response.body()?.error
 
                 if (response.isSuccessful && color != null) {
                     irAResultados(color)
-                } else if (errorApi != null) {
-                    mostrarError(errorApi)
                 } else {
-                    mostrarError("Error HTTP ${response.code()}")
+                    mostrarError()
                 }
             } catch (e: Exception) {
                 // Sin internet, servidor caído, etc.
-                mostrarError("Error de conexión: ${e.localizedMessage}")
+                mostrarError()
             }
         }
     }
 
-    private fun mostrarError(mensaje: String) {
+    private fun mostrarError() {
         binding.progreso.visibility = View.GONE
         binding.btnReintentar.visibility = View.VISIBLE
-        // El error puede ser largo: letra más chica para que no empuje la ruleta
-        binding.tvEstado.textSize = 16f
-        binding.tvEstado.text = getString(R.string.error_api, mensaje)
+        binding.tvEstado.text = getString(R.string.error_api)
     }
 
     private fun irAResultados(color: String) {
@@ -114,15 +97,9 @@ class GiroRuletaActivity : AppCompatActivity() {
         finish()
     }
 
+    // Claves para pasarle el número ganador y su color a ResultadoActivity
     companion object {
         const val EXTRA_NUMERO = "extra_numero"
         const val EXTRA_COLOR = "extra_color"
-
-        // Orden de los números en la imagen, empezando por el 0 y en sentido horario
-        val ORDEN_RULETA = listOf(
-            "0", "32", "15", "19", "4", "21", "2", "25", "17", "34", "6", "27", "13",
-            "36", "11", "30", "8", "23", "10", "5", "24", "16", "33", "1", "20", "14",
-            "31", "9", "22", "18", "29", "7", "28", "12", "35", "3", "26"
-        )
     }
 }

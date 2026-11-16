@@ -42,7 +42,7 @@
     <!-- Giro -->
     <string name="girando">Está girando la ruleta…</string>
     <string name="consultando_color">Consultando el color a la API…</string>
-    <string name="error_api">No pudimos consultar el color del número.\n(%1$s)</string>
+    <string name="error_api">¡Ups! Si no tienes internet no puedes saber el resultado de la ruleta</string>
     <string name="boton_reintentar">Reintentar</string>
 
     <!-- Resultado -->
